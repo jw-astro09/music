@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Batch MP4 to MP3 ZIP Converter</title>
+    <title>MP4 to MP3 Converter</title>
     <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.10.1/dist/ffmpeg.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
@@ -22,13 +22,13 @@
 <body>
 
 <div class="card">
-    <h2>MP4 일괄 변환 & ZIP</h2>
+    <h2>MP3로 변환 프로그램</h2>
     <div class="file-input-wrapper" onclick="document.getElementById('uploader').click()">
         <p id="fileNameDisplay">파일을 선택하거나 드래그하세요 (여러 개 가능)</p>
         <input type="file" id="uploader" accept="video/mp4" multiple style="display: none;">
     </div>
     
-    <button id="convertBtn" class="btn">변환 및 ZIP 생성</button>
+    <button id="convertBtn" class="btn">변환 및 다운로드</button>
     
     <div class="progress-container" id="progressContainer">
         <div id="progressBar"></div>
