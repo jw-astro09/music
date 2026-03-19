@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>HTML5 MP4 to MP3 Converter</title>
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+</head>
+<body>
+    <h2>MP4 to MP3 변환기 (Browser 기반)</h2>
+    <input type="file" id="uploader" accept="video/mp4">
+    <button id="convertBtn">MP3로 변환하기</button>
+    <p id="message"></p>
+    <div id="downloadArea"></div>
+
+    <script>
+        const { createFFmpeg, fetchFile } = FFmpeg;
+        const ffmpeg = createFFmpeg({ log: true });
+
+        const convert = async () => {
+            const message = document.getElementById('message');
+            const uploader = document.getElementById('uploader');
+            if (uploader.files.length === 0) return alert("파일을 선택해주세요!");
+
+            const file = uploader.files[0];
+            message.innerText = "라이브러리 로딩 중...";
+
+            if (!ffmpeg.isLoaded()) {
+                await ffmpeg.load();
+            }
+
+            message.innerText = "변환 시작... (시간이 걸릴 수 있습니다)";
+            
+            // FFmpeg 가상 파일 시스템에 파일 쓰기
+            ffmpeg.FS('writeFile', 'input.mp4', await fetchFile(file));
+
+            // 변환 명령어 실행 (-vn: 비디오 제외, -ab: 비트레이트)
+            await ffmpeg.run('-i', 'input.mp4', '-vn', '-ab', '192k', 'output.mp3');
+
+            // 결과 파일 읽기
+            const data = ffmpeg.FS('readFile', 'output.mp3');
+
+            // 다운로드 링크 생성
+            const url = URL.createObjectURL(new Blob([data.buffer], { type: 'audio/mp3' }));
+            const downloadArea = document.getElementById('downloadArea');
+            downloadArea.innerHTML = `<a href="${url}" download="converted.mp3">변환된 MP3 다운로드 클릭</a>`;
+            message.innerText = "변환 완료!";
+        };
+
+        document.getElementById('convertBtn').addEventListener('click', convert);
+    </script>
+</body>
+</html>
